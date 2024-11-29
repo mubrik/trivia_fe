@@ -10,14 +10,13 @@ const createTypeContext =  <ContextType extends unknown | null>(contextName: str
   // create a context using undefined, since no upfront value
   const Context = React.createContext<ContextType | undefined >(undefined);
   // name for context
-  Context.displayName = contextName || ""; 
+  Context.displayName = contextName || "";
 
   // hook that returns the value of the context
-  // type checking for undefined is done here so TS can infer the type without checking in components!
-  
   const useContext = (): ContextType => {
     const contextValue = React.useContext(Context);
 
+    // type checking for undefined is done here so TS can infer the type without checking in components!
     if (contextValue === undefined) {
       // throw
       throw new Error(`useContext for ${Context.displayName} must be used in a provider with a value`);

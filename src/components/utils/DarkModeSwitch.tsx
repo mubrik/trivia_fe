@@ -3,10 +3,9 @@ import { styled } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
 // icons
 import { EmojiObjectsOutlined } from '@mui/icons-material';
-// dk mode context
-import { useDarkMode } from '../themeprovider/ThemeProviderContext';
 // animation
 import { motion } from "framer-motion";
+import useGetColorScheme from '@hooks/useGetColorSheme';
 
 const StyledDiv = styled("div")(({theme}) => ({
   position: "relative",
@@ -19,7 +18,7 @@ const StyledDiv = styled("div")(({theme}) => ({
 
 const DarkModeSwitch = (): JSX.Element => {
   // darkmode
-  const {darkMode, setDarkMode} = useDarkMode();
+  const {colorMode, setMode} = useGetColorScheme();
 
   return(
     <StyledDiv>
@@ -32,8 +31,8 @@ const DarkModeSwitch = (): JSX.Element => {
         }}
       >
         <IconButton
-          color={darkMode ? "secondary" : "primary"}
-          onClick={() => setDarkMode(state => !state)}
+          color={colorMode === "dark" ? "secondary" : "primary"}
+          onClick={() => setMode(colorMode === "dark" ? "light" : "dark")}
         >
           <EmojiObjectsOutlined fontSize={"medium"}/>
         </IconButton>

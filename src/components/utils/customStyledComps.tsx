@@ -37,7 +37,7 @@ export const MainBlurShadowContainer = (
   return(
     <Container maxWidth="xl" disableGutters
       sx={{
-        p:{xm:0.5, sm: 0.8, md: 1.2}, 
+        p: {xs:0.5, sm: 0.8, md: 1.2},
         mt: {xs:2, md:3, lg:4},
         display: "flex",
         alignItems: "center",
@@ -46,6 +46,31 @@ export const MainBlurShadowContainer = (
         backdropFilter: "blur(6px)",
         overflowX: "hidden",
         boxShadow: disableShadow ? undefined : BOX_SHADOW
+      }}
+    >
+      { children }
+    </Container>
+  );
+};
+
+export const MainIsPlayingContainer = (
+  // adding disable shadow to props
+  props: GenericProps
+) => {
+
+  const {children } = props;
+
+  return(
+    <Container maxWidth="xl" disableGutters
+      sx={{
+        p: {xs: 0.5, sm: 0.8, md: 1.2},
+        display: "flex",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "12px",
+        backdropFilter: "blur(6px)",
+        overflowX: "hidden",
       }}
     >
       { children }
@@ -78,7 +103,7 @@ export const AccordionMotionDiv = ({ children, motionKey }: GenericProps & IMoti
       <Stack
         direction={"column"} spacing={2}
         alignItems={"center"}
-        sx={{p:1.2}}
+        sx={{p: 1.2}}
       >
         { children }
       </Stack>

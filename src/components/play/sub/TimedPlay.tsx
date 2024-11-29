@@ -1,78 +1,62 @@
-import { useState, useEffect, useRef } from "react";
-// router
-import { useNavigate } from "react-router-dom";
-// material
-import { 
-  Stack, Button, Box, CircularProgress, CircularProgressProps,
-  Typography
-} from "@mui/material";
-// animate
-import { motion, AnimatePresence } from "framer-motion";
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router';
+import {Stack, Box, CircularProgress, CircularProgressProps, Typography} from '@mui/material';
 // comps
-import AskQuestionList from "../question/AskQuestionList";
-import Gameover from "../gameover/Gameover";
-import { 
-  StyledQuestionBoxDiv, StyledFullWidthMotionDiv,
-  StyledCountownPositionDiv, LinearLoading
-} from "../setup/CustomSetupComps";
-import ErrorPage from "../../error/ErrorPage";
+import AskQuestionList from '../question/AskQuestionList';
+import Gameover from '../gameover/Gameover';
+import {
+  StyledQuestionBoxDiv,
+  StyledFullWidthMotionDiv,
+  StyledCountownPositionDiv,
+  LinearLoading,
+} from '../setup/CustomSetupComps';
+import ErrorPage from '../../error/ErrorPage';
 // hooks
-import useCountdownTimer from "../hooks/useCountdownTimer";
-import useMutableStore from "../hooks/useMutableStore";
-// store
-import { useStore } from "../../store/StoreContext";
-// service query
-import { useTimedTriviaQuestions } from "../queries/queries";
+import useCountdownTimer from '../hooks/useCountdownTimer';
+import useMutableStore from '../hooks/useMutableStore';
+import {useAppStore} from '@context/storeProvider';
+import { useFetchTimedTriviaQuestions } from '@service/queries/trivia.queries';
+import { buildUrlQuery } from '@utils/index';
 // types
-import type { 
-  IAnsweredQuestion, timedGameState, IQuestion
-} from "../../compTypes";
+import type {IAnsweredQuestion, timedGameState, IQuestion} from '../../compTypes';
 
+export default function TimedPlayDataComp() {
+  const {timedPlaySettings} = useAppStore();
+  const {data, isFetching, isLoading, isError, isSuccess} = useFetchTimedTriviaQuestions(buildUrlQuery(timedPlaySettings));
 
-export default function TimedPlayDataComp () {
-  // get settings
-  const { timedPlaySettings } = useStore();
-  // make query
-  const { data, isFetching, isLoading, isError } = useTimedTriviaQuestions(timedPlaySettings);
-  // loading
   if (isFetching || isLoading) {
-    return(
-      <LinearLoading />
-    );
+    return <LinearLoading />;
   }
-  // error
+
   if (isError) {
-    return(
-      <ErrorPage />
-    );
+    return <ErrorPage />;
   }
-  // only return comp if datat available
-  return(
-    <TimedPlay questions={data}/>
-  );
-};
 
-const TimedPlay = ({ questions }: {questions: IQuestion[]}) => {
+  if (isSuccess) {
+    return <TimedPlay questions={data} />;
+  }
 
+  return null;
+}
+
+const TimedPlay = ({questions}: {questions: IQuestion[]}) => {
   // questions data, dummy data for now, react-query later
   // const questions = dummyData["data"];
   // state
-  const [gameState, setGameState] = useState<timedGameState>("idle");
+  const [gameState, setGameState] = useState<timedGameState>('idle');
   // store
-  const { timedPlaySettings } = useStore();
+  const {timedPlaySettings} = useAppStore();
   // nav
   const navigate = useNavigate();
   // timer for game
-  const { countdownInSeconds, startCountdown, stopCountdown, resetCountdown } = useCountdownTimer(timedPlaySettings);
+  const {countdownInSeconds, startCountdown, stopCountdown, resetCountdown} = useCountdownTimer(timedPlaySettings);
   // not necessary for rendering so using a mutable ref as store of answered questions
-  const { 
-    getMutableStoreValue: gMStore, addMutableStore: aMStore 
-  } = useMutableStore<IAnsweredQuestion>([]);
+  const {getMutableStoreValue: gMStore, addMutableStore: aMStore} = useMutableStore<IAnsweredQuestion>([]);
 
   // effect check if settings exist, nav to setup if not
   useEffect(() => {
-    if (typeof timedPlaySettings === "undefined") {
-      navigate("../timed_setup", {replace: true});
+    if (typeof timedPlaySettings === 'undefined') {
+      navigate('../timed_setup', {replace: true});
     }
   }, [timedPlaySettings]);
 
@@ -80,24 +64,21 @@ const TimedPlay = ({ questions }: {questions: IQuestion[]}) => {
   useEffect(() => {
     if (timedPlaySettings && questions) {
       // start
-      setGameState("inPlay");
+      setGameState('inPlay');
       startCountdown();
     }
 
     return () => {
-      setGameState("idle");
+      setGameState('idle');
       resetCountdown();
     };
-
   }, [timedPlaySettings, questions]);
 
   // effect for monitoring countdown timer
   useEffect(() => {
-
     if (countdownInSeconds <= 0) {
-      setGameState("end");
+      setGameState('end');
     }
-
   }, [countdownInSeconds]);
 
   // call backs
@@ -107,51 +88,40 @@ const TimedPlay = ({ questions }: {questions: IQuestion[]}) => {
     // do ther stuff
   };
 
-  return(
+  return (
     <StyledFullWidthMotionDiv motionKey="timed-play">
-      { gameState === "end" ?
-          <Gameover 
-            gamemode={"timed"} 
-            questionResults={gMStore()} 
-            completionTime={countdownInSeconds} 
-          /> :
-        gameState === "inPlay" && questions ?
-          <Stack
-            justifyContent="center"
-            alignItems="center"
-            direction={"column"}
-            spacing={2}
-          >
+      {
+        gameState === 'end' ? (
+          <Gameover gamemode={'timed'} questionResults={gMStore()} completionTime={countdownInSeconds} />
+        ) : gameState === 'inPlay' && questions ? (
+          <Stack justifyContent="center" alignItems="center" direction={'column'} spacing={2}>
             <StyledCountownPositionDiv>
-              <CircularProgressWithLabel value={countdownInSeconds}/>
+              <CircularProgressWithLabel value={countdownInSeconds} />
             </StyledCountownPositionDiv>
-              {/* <Stack direction={"column"}>
+            {/* <Stack direction={"column"}>
                 <Button variant={"outlined"} onClick={() => startCountdown()}> Start Countdown </Button>
                 <Button variant={"outlined"} onClick={() => stopCountdown()}> Stop Countdown </Button>
                 <Button variant={"outlined"} onClick={() => resetCountdown()}> Reset Countdown </Button>
               </Stack> */}
             <StyledQuestionBoxDiv>
-              <AskQuestionList 
-                questions={questions} 
+              <AskQuestionList
+                questions={questions}
                 storeAnsQuestion={handleQuestionAnswered}
                 gameState={gameState}
                 setGameState={setGameState}
                 displayAnswer={timedPlaySettings.displayAnswer}
               />
             </StyledQuestionBoxDiv>
-          </Stack> :
-          null // for now
+          </Stack>
+        ) : null // for now
       }
     </StyledFullWidthMotionDiv>
   );
 };
 
-
-function CircularProgressWithLabel(
-  props: CircularProgressProps & { value: number },
-) {
+function CircularProgressWithLabel(props: CircularProgressProps & {value: number}) {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+    <Box sx={{position: 'relative', display: 'inline-flex'}}>
       <CircularProgress variant="indeterminate" {...props} />
       <Box
         sx={{
@@ -165,12 +135,8 @@ function CircularProgressWithLabel(
           justifyContent: 'center',
         }}
       >
-        <Typography
-          variant="body1"
-          component="div"
-          color="text.secondary"
-        >{`${Math.round(props.value)}`}</Typography>
+        <Typography variant="body1" component="div" color="text.secondary">{`${Math.round(props.value)}`}</Typography>
       </Box>
     </Box>
   );
-};
+}

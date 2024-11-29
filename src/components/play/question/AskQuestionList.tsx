@@ -1,19 +1,12 @@
 import { useState, useEffect } from "react";
-// material
-import { Stack, Button } from "@mui/material";
-// custom comp
-import AskQuestion from "./AskQuestion";
-// animate
+import { Stack } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
+import AskQuestion from "./AskQuestion";
 // type
 import { IAskQuestionListProps } from "../../compTypes";
 
-export default function AskQuestionList (
-  {
-    questions, storeAnsQuestion, setGameState,
-    displayAnswer
-  }: IAskQuestionListProps
-) {
+export default function AskQuestionList ({questions, storeAnsQuestion, setGameState, displayAnswer}: IAskQuestionListProps)
+{
 
   // const questions = dummyData["data"];
   const [currQuestionIndex, setCurrQuestionIndex] = useState(0);
@@ -48,8 +41,8 @@ export default function AskQuestionList (
           exit={{ x: -300, opacity: 0, }}
           transition={{ type: 'spring', duration: 0.5, mass: 0.3 }}
         >
-          <AskQuestion 
-            mode={"timed"} 
+          <AskQuestion
+            mode={"timed"}
             question={questions[currQuestionIndex]}
             storeAnsQuestion={storeAnsQuestion}
             onAnswer={goNextQuestion}

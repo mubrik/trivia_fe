@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion";
 // router
 import {
   Route, Routes
-} from "react-router-dom";
+} from "react-router";
 // util
 import { useDarkMode } from './components/themeprovider/ThemeProviderContext';
 // comps

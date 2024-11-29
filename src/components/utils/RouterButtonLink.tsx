@@ -5,7 +5,7 @@ import {
   Tab, TabProps
 } from '@mui/material';
 // react router
-import { Link as RouterLink, useNavigate} from 'react-router-dom';
+import { Link as RouterLink, useNavigate} from 'react-router';
 
 function GenericCustomComponent<C extends React.ElementType>(
   props: ButtonProps<C, { component?: C }>,

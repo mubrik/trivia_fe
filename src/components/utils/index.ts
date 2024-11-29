@@ -16,3 +16,8 @@ export function shuffle(array: string[]) {
 
   return array;
 }
+
+export function indexToOption(index: number) {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return alphabet[index] || "?";
+}
