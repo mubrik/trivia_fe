@@ -45,21 +45,16 @@ export const getTriviaQuestions = async ({ queryKey, signal }: IGetQuestionsQuer
 
   const _uriQuery = getQueryFromObj(limit, categories, difficulty, tags);
 
-  console.log("keys", _key, limit, categories, difficulty, tags );
-  console.log(_uriQuery);
-
   // request
   const response = await baseAxios.get<IQuestion[]>(`questions?${_uriQuery}`, {
     signal: signal,
   });
   return response.data;
-  
 };
 
 // function to get categories
 export const getTriviaCategories = async ({ queryKey, signal }: QueryFunctionContext) => {
 
-  console.log("categories query");
   // request
   const response = await baseAxios.get<Record<string, string[]>>('categories', {
     signal: signal,
@@ -83,7 +78,6 @@ export const getVerifySession = async ({ queryKey, signal }: QueryFunctionContex
     signal: signal,
   });
   return response.data;
-  
 };
 
 // react query function to login session
@@ -98,7 +92,7 @@ export const postSessionLogout = async () => {
   return baseAxios.post<Record<"status", string>>('auth/sessionLogout');
 };
 
-// react query function to register user 
+// react query function to register user
 export const postRegisterUser = async (bodyData: Record<string, any>) => {
   // request
   return baseAxios.post<Record<"status", string>>('auth/register', bodyData);

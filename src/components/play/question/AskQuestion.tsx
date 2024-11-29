@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 // material
 import { 
   Button, Paper, Stack,
@@ -12,10 +12,13 @@ import { AnsQuestion } from "../playClasses";
 import useStopwatch from "../hooks/useStopwatch";
 // animation
 import { AnimatePresence, motion } from "framer-motion";
+import { shuffle } from "../../utils";
 
 export default function AskQuestion ({
-  question, storeAnsQuestion, onAnswer,
-  displayAnswer
+  displayAnswer,
+  question,
+  storeAnsQuestion,
+  onAnswer,
 }: IAskQuestionProps) {
 
   const [answerMode, setAnswerMode] = useState(false);
@@ -36,7 +39,6 @@ export default function AskQuestion ({
   useEffect(() => {
 
     if(displayAnswer && answerMode) {
-      console.log("setting timeout");
       const timer = setTimeout(() => {
         // run handle after answer
         onAnswer ? onAnswer() : null;
@@ -49,7 +51,6 @@ export default function AskQuestion ({
 
   const isGuessCorrect = (guess: string) => {
     // simple check for now
-    console.log("guess", guess);
     return question.correctAnswer === guess;
   };
 
@@ -58,15 +59,6 @@ export default function AskQuestion ({
     const selectedAnswer = _selectedOption;
     // verify
     const result = isGuessCorrect(selectedAnswer);
-
-    if (result) {
-      // perform on sucess ops/callback
-      console.log("pass");
-    } else {
-      console.log("fail");
-      // perform fail success ops/callback
-    }
-
     // store
     storeAnsQuestion(
       new AnsQuestion(question.id, selectedAnswer, calculateElapsedTime(), result)
@@ -82,12 +74,16 @@ export default function AskQuestion ({
     onAnswer ? onAnswer() : null;
   };
 
+  const memoizedQuestion = useMemo(() => {
+    return shuffle([...question.incorrectAnswers, question.correctAnswer]);
+  }, [question]);
+
   return(
     <Paper elevation={4}
       sx={{
         p: 2,
-        minWidth:"60%",
-        mt: {xs:1.2, sm:0.8} // move paper down a bit to not obstruct timer
+        minWidth: "60%",
+        mt: {xs:1.2, sm: 0.8} // move paper down a bit to not obstruct timer
       }}
     >
     <AnimatePresence mode={"wait"}>
@@ -102,7 +98,7 @@ export default function AskQuestion ({
         <Stack direction={"column"} spacing={4} justifyContent={"center"} alignItems={"center"}>
           <Typography> {question.question} </Typography>
           {/* chck if an answer is long */}
-          <Stack 
+          <Stack
             direction={
               question.correctAnswer.length > 40 ?
               {lg:"row", xl:"column"} : {sm:"column", tab:"row"}
@@ -110,8 +106,7 @@ export default function AskQuestion ({
             spacing={2}
           >
             {
-              [...question.incorrectAnswers, question.correctAnswer]
-                .map((option, index) => (
+              memoizedQuestion.map((option, index) => (
                   <Button 
                     variant="outlined" 
                     onClick={() => {handleVerifyAnswer(option);}} 
