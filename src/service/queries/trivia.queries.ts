@@ -3,7 +3,7 @@ import {baseAxios} from '@service/axios';
 // types
 import type {IQuestion} from '@components/compTypes';
 
-const TRIVIA_QUERY_KEY = {
+export const TRIVIA_QUERY_KEY = {
   BASE: ['trivia'],
   TIMED: ['trivia', 'timed'],
   FREE: ['trivia', 'free'],

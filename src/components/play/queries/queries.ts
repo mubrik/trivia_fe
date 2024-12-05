@@ -10,7 +10,7 @@ const transformCategoriesData = (data: Record<string, string[]>) => {
   }, [] as string[]);
 };
 
-export const useFreeTriviaQuestions = ({limit, categories, difficulty, tags}: Concrete<IQueryObj>) => {
+/* export const useFreeTriviaQuestions = ({limit, categories, difficulty, tags}: Concrete<IQueryObj>) => {
   return useQuery(['trivia-free', limit, categories, difficulty, tags], getTriviaQuestions, {
     refetchOnWindowFocus: false,
   });
@@ -37,4 +37,4 @@ export const useGetTriviaTags = () => {
     staleTime: 86400000,
     placeholderData: ['arts_and_literature', 'biology', 'business', 'chemistry'],
   });
-};
+}; */

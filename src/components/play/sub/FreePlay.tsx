@@ -88,7 +88,7 @@ function FreePlay({questions}: {questions: IQuestion[]}) {
     <StyledFullWidthMotionDiv motionKey="free-play">
       {
         gameState === 'end' ? (
-          <Gameover gamemode={'free'} questionResults={gMStore()} completionTime={calculateElapsedTime()} />
+          <Gameover queryKey={buildUrlQuery(freePlaySettings)} gamemode={'free'} questionResults={gMStore()} completionTime={calculateElapsedTime()} />
         ) : gameState === 'inPlay' && questions ? (
           <Stack justifyContent="center" alignItems="center" direction={'row'} spacing={2}>
             <StyledQuestionBoxDiv>

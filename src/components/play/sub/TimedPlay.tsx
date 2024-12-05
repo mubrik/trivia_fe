@@ -92,7 +92,7 @@ const TimedPlay = ({questions}: {questions: IQuestion[]}) => {
     <StyledFullWidthMotionDiv motionKey="timed-play">
       {
         gameState === 'end' ? (
-          <Gameover gamemode={'timed'} questionResults={gMStore()} completionTime={countdownInSeconds} />
+          <Gameover queryKey={buildUrlQuery(timedPlaySettings)} gamemode={'timed'} questionResults={gMStore()} completionTime={countdownInSeconds} />
         ) : gameState === 'inPlay' && questions ? (
           <Stack justifyContent="center" alignItems="center" direction={'column'} spacing={2}>
             <StyledCountownPositionDiv>

@@ -87,6 +87,7 @@ export interface IAskQuestionProps {
 
 export interface IGameOverProps {
   gamemode: "timed" | "free";
+  queryKey: string;
   questionResults: IAnsweredQuestion[];
   completionTime?: number;
 }
