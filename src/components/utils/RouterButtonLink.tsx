@@ -1,30 +1,23 @@
 import * as React from 'react';
-// material
-import { 
-  ButtonProps, Button, useMediaQuery, IconButton,
-  Tab, TabProps
-} from '@mui/material';
-// react router
-import { Link as RouterLink, useNavigate} from 'react-router-dom';
+import {ButtonProps, Button, useMediaQuery, IconButton, Tab, TabProps} from '@mui/material';
+import {Link as RouterLink, useNavigate} from 'react-router';
 
-function GenericCustomComponent<C extends React.ElementType>(
-  props: ButtonProps<C, { component?: C }>,
-) {
+function GenericCustomComponent<C extends React.ElementType>(props: ButtonProps<C, {component?: C}>) {
   /* ... */
 }
 
 type CastedForwardRefButtonType = <C extends React.ElementType>(
-  props: ButtonProps<C, { component?: C }>,
-  ref?: React.Ref<HTMLButtonElement>
+  props: ButtonProps<C, {component?: C}>,
+  ref?: React.Ref<HTMLButtonElement>,
 ) => React.ReactElement;
 
 type CastedForwardRefButtonLinkType = <C extends React.ElementType>(
-  props: ButtonProps<C, { to: string }>,
-  ref?: React.Ref<HTMLButtonElement>
+  props: ButtonProps<C, {to?: string}>,
+  ref?: React.Ref<HTMLButtonElement>,
 ) => React.ReactElement;
 
 const CastedForwardRefButtonFnc: CastedForwardRefButtonType = (props, ref) => {
-  const { children, ...rest } = props;
+  const {children, ...rest} = props;
   return (
     <Button ref={ref} {...rest}>
       {children}
@@ -33,7 +26,7 @@ const CastedForwardRefButtonFnc: CastedForwardRefButtonType = (props, ref) => {
 };
 
 const RouterLinkButtonComp: CastedForwardRefButtonLinkType = (props, ref) => {
-  const { children, to, ...rest } = props;
+  const {children, to, ...rest} = props;
 
   const _props = {...rest, component: RouterLink};
 
@@ -44,8 +37,7 @@ const RouterLinkButtonComp: CastedForwardRefButtonLinkType = (props, ref) => {
   );
 };
 
-export const RouterLinkTab = ({href, ...rest}: TabProps & {href: string, component: "a"}) => {
-
+export const RouterLinkTab = ({href, ...rest}: TabProps & {href: string; component: 'a'}) => {
   const navigate = useNavigate();
 
   return (
@@ -60,36 +52,29 @@ export const RouterLinkTab = ({href, ...rest}: TabProps & {href: string, compone
 };
 
 const RouterLinkResponsiveButton: CastedForwardRefButtonLinkType = (props, ref) => {
-
   const isSmallScreen = useMediaQuery('(max-width:382px)');
 
-  const { children, to, endIcon, ...rest } = props;
+  const {children, to, endIcon, ...rest} = props;
 
   const _props = {...rest, component: RouterLink};
 
   return (
     <>
-    {
-      isSmallScreen ?
-      <IconButton color={rest.color} {..._props} to={to}>
-        { endIcon }
-      </IconButton> : 
-      <Button ref={ref} {..._props} to={to} endIcon={endIcon}>
-        { children }
-      </Button>
-    }
+      {isSmallScreen ? (
+        <IconButton color={rest.color} {..._props} to={to}>
+          {endIcon}
+        </IconButton>
+      ) : (
+        <Button ref={ref} {..._props} to={to} endIcon={endIcon}>
+          {children}
+        </Button>
+      )}
     </>
   );
 };
 
-export const RouterLinkButton = React.forwardRef(
-  RouterLinkButtonComp
-) as CastedForwardRefButtonLinkType;
+export const RouterLinkButton = React.forwardRef(RouterLinkButtonComp) as CastedForwardRefButtonLinkType;
 
-export const RespRouterLinkButton = React.forwardRef(
-  RouterLinkResponsiveButton
-) as CastedForwardRefButtonLinkType;
+export const RespRouterLinkButton = React.forwardRef(RouterLinkResponsiveButton) as CastedForwardRefButtonLinkType;
 
-export const CastedForwardRefButton = React.forwardRef(
-  CastedForwardRefButtonFnc
-) as CastedForwardRefButtonType;
+export const CastedForwardRefButton = React.forwardRef(CastedForwardRefButtonFnc) as CastedForwardRefButtonType;

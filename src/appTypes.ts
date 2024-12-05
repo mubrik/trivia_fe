@@ -1,6 +1,5 @@
-import React from "react";
-import dummyData from "../service/dummy-json.json";
-import type { Query, QueryFunctionContext, QueryKey } from '@tanstack/react-query';
+import React from 'react';
+import type {QueryFunctionContext} from '@tanstack/react-query';
 
 // generics
 // make keys required
@@ -13,13 +12,14 @@ type Relaxed<Type> = {
 };
 
 // routes
-export type ValidRoutes = "timed_setup"|"free_setup"|"free"|"timed"|"home"|"play"|"mode";
+export type ValidRoutes = 'timed_setup' | 'free_setup' | 'free' | 'timed' | 'home' | 'play' | 'mode';
 
 // store types
 export interface IStoreState {
-  mode: "timed" | "free";
+  mode: 'timed' | 'free';
   timedPlaySettings: Concrete<ITimedGameSettings>;
   freePlaySettings: Concrete<IFreeGameSettings>;
+  darkMode: "dark" | "light";
   // generalSettings: IGeneralSettings;
 }
 
@@ -38,14 +38,19 @@ export interface IFreeGameSettings extends IQueryObj {
 // }
 
 export type StoreAction =
-  { type: "UPDATE_MODE", mode: IStoreState["mode"]} |
-  { type: "UPDATE_TIMED_SETTINGS", settings: Relaxed<ITimedGameSettings>} |
-  { type: "UPDATE_FREE_SETTINGS", settings: Relaxed<IFreeGameSettings>} |
-  { type: "UPDATE_FREE_GENERAL_SETTINGS", generalSettings: IQueryObj } |
-  { type: "UPDATE_TIMED_GENERAL_SETTINGS", generalSettings: IQueryObj }
+  | {type: 'UPDATE_MODE'; mode: IStoreState['mode']}
+  | {type: 'UPDATE_TIMED_SETTINGS'; settings: Relaxed<ITimedGameSettings>}
+  | {type: 'UPDATE_FREE_SETTINGS'; settings: Relaxed<IFreeGameSettings>}
+  | {type: 'UPDATE_FREE_GENERAL_SETTINGS'; generalSettings: IQueryObj}
+  | {type: 'UPDATE_TIMED_GENERAL_SETTINGS'; generalSettings: IQueryObj}
+  | {type: 'SET_DARK_MODE'; darkMode: "dark" | "light"};
 
-export interface IStoreContextValue extends IStoreState{
+export interface IStoreContextValue extends IStoreState {
   dispatchToStore: React.Dispatch<StoreAction>;
+  setDarkMode: (val: "dark" | "light") => void;
+  setGameMode: (val: "free" | "timed") => void;
+  setTimedSettings: (val: ITimedGameSettings) => void;
+  setFreeSettings: (val: IFreeGameSettings) => void;
 }
 
 export interface IQuestion {
@@ -55,8 +60,8 @@ export interface IQuestion {
   incorrectAnswers: string[];
   category: string;
   tags: string[];
-  type: "Multiple Choice" | "boolean";
-  difficulty: "hard" | "easy" | "medium";
+  type: 'Multiple Choice' | 'boolean';
+  difficulty: 'hard' | 'easy' | 'medium';
   regions: string[];
 }
 
@@ -77,7 +82,7 @@ export interface IAskQuestionListProps {
 
 export interface IAskQuestionProps {
   question: IQuestion;
-  mode: "timed" | "free";
+  mode: 'timed' | 'free';
   displayAnswer: boolean;
   storeAnsQuestion(param: IAnsweredQuestion): void;
   onAnswer?(): void;
@@ -86,24 +91,23 @@ export interface IAskQuestionProps {
 }
 
 export interface IGameOverProps {
-  gamemode: "timed" | "free";
-  queryKey: string;
+  gamemode: 'timed' | 'free';
   questionResults: IAnsweredQuestion[];
   completionTime?: number;
 }
 
 export interface IQueryObj {
   limit?: number;
-  difficulty?: "hard" | "easy" | "medium";
+  difficulty?: 'hard' | 'easy' | 'medium';
   tags?: string[];
   categories?: string[];
 }
 
 export interface IGetQuestionsQueryFunction extends QueryFunctionContext {
-  queryKey: [string, number, string[], string, string[]]
+  queryKey: [string, number, string[], string, string[]];
 }
 
-export type timedGameState = "idle" | "inPlay" | "endNext" |"end";
+export type timedGameState = 'idle' | 'inPlay' | 'endNext' | 'end';
 
 export interface IGameModesAccordionProps {
   timedSettings: Concrete<ITimedGameSettings>;

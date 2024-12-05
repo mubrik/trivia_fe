@@ -1,97 +1,102 @@
-import { useState, useMemo, ReactNode } from "react";
+import {ReactNode} from 'react';
 // material
-import { 
-  Stack, Typography, Checkbox, FormControlLabel,
-  Box, Chip, Select, FormControl, InputLabel, MenuItem,
-  OutlinedInput, FormHelperText, LinearProgress, useMediaQuery, Button
-} from "@mui/material";
+import {
+  Stack,
+  Checkbox,
+  FormControlLabel,
+  Box,
+  Chip,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  FormHelperText,
+  LinearProgress,
+  useMediaQuery,
+  Button,
+} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
-// Store
-import { useStore } from "../../store/StoreContext";
-// query
-import { useGetTriviaTags, useGetTriviaCategories } from "../queries/queries";
+import {styled} from '@mui/material/styles';
 // animate
-import { motion } from "framer-motion";
+import {motion} from 'framer-motion';
 
 // styled divs
-export const StyledOptionDiv = styled("div")(({ theme }) => ({
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  justifyContent: "center",
-  alignSelf: "stretch",
-  alignItems: "center", 
-  borderRadius: "8px", 
-  padding: "8px",
-  marginBottom: "22px",
+export const StyledOptionDiv = styled('div')(({theme}) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  alignSelf: 'stretch',
+  alignItems: 'center',
+  borderRadius: '8px',
+  padding: '8px',
+  marginBottom: '22px',
 }));
 
-export const StyledQuestionBoxDiv = styled("div")(({ theme }) => ({
-  display: "flex",
-  width: "100%", // mobile
+export const StyledQuestionBoxDiv = styled('div')(({theme}) => ({
+  display: 'flex',
+  width: '100%', // mobile
   padding: theme.spacing(0.8),
-  textAlign: "center",
-  [theme.breakpoints.up("md")]:{
-    width: "88%",
+  textAlign: 'center',
+  [theme.breakpoints.up('md')]: {
+    width: '88%',
     padding: theme.spacing(2),
-  }
+  },
 }));
 
-export const StyledCountownPositionDiv = styled("div")(({ theme }) => ({
-  position: "fixed",
+export const StyledCountownPositionDiv = styled('div')(({theme}) => ({
+  position: 'fixed',
   top: 0,
   right: 0,
 }));
 
 export const LinearLoading = () => {
-
-  return(
-    <Stack spacing={1} sx={{width: "100%"}}>
-      <LinearProgress color="secondary"/>
+  return (
+    <Stack spacing={1} sx={{width: '100%'}}>
+      <LinearProgress color="secondary" />
     </Stack>
   );
 };
 
 // motion comps
-export const StyledFullWidthMotionDiv = ({ children, motionKey }: {children: ReactNode, motionKey: string}) => {
+export const StyledFullWidthMotionDiv = ({children, motionKey}: {children: ReactNode; motionKey: string}) => {
   return (
     <motion.div
       key={motionKey}
-      initial={{ opacity: 0, width: "100%" }}
-      animate={{ opacity: 1, width: "100%"}}
-      exit={{ opacity: 0, width: "100%" }}
+      initial={{opacity: 0, width: '100%'}}
+      animate={{opacity: 1, width: '100%'}}
+      exit={{opacity: 0, width: '100%'}}
     >
-      { children }
+      {children}
     </motion.div>
-  )
+  );
 };
 
 interface ICustomSelectProps {
   items?: string[];
   selecteditems: string[];
-  onChange: (type: "cat" | "tag", value: string | string[]) => void;
-  onClear: (type: "cat" | "tag") => void;
+  onChange: (type: 'cat' | 'tag', value: string | string[]) => void;
+  onClear: (type: 'cat' | 'tag') => void;
   label: string;
-  type: "cat"|"tag";
+  type: 'cat' | 'tag';
 }
 
 export const CustomMultiSelect = ({items, selecteditems, onChange, label, type, onClear}: ICustomSelectProps) => {
-
   const isSmallScreen = useMediaQuery('(max-width:382px)');
-  
-  return(
-    <Stack direction={"row"} flexWrap={"wrap"}>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id={`multi-chip-${type}-label`}> { label } </InputLabel>
+
+  return (
+    <Stack direction={'row'} flexWrap={'wrap'}>
+      <FormControl sx={{m: 1, width: 300}}>
+        <InputLabel id={`multi-chip-${type}-label`}> {label} </InputLabel>
         <Select
           multiple
           value={selecteditems}
           onChange={(e) => onChange(type, e.target.value)}
           input={<OutlinedInput id={`select-multiple-chip-${type}`} label="Chip" />}
           renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
               {selected.map((value) => (
                 <Chip key={value} label={value} />
               ))}
@@ -99,41 +104,36 @@ export const CustomMultiSelect = ({items, selecteditems, onChange, label, type, 
           )}
         >
           {items?.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-            >
+            <MenuItem key={name} value={name}>
               {name}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      {
-        isSmallScreen ?
-        <Button variant="outlined" color="secondary" 
-          startIcon={<ClearIcon />} sx={{ml:1.2}} aria-label="clear">
+      {isSmallScreen ? (
+        <Button variant="outlined" color="secondary" startIcon={<ClearIcon />} sx={{ml: 1.2}} aria-label="clear">
           clear
-        </Button> :
+        </Button>
+      ) : (
         <IconButton aria-label="clear" onClick={() => onClear(type)}>
-          <ClearIcon color="secondary"/>
+          <ClearIcon color="secondary" />
         </IconButton>
-      }
+      )}
     </Stack>
   );
 };
 
-type tDifficuty = "easy"|"medium"|"hard";
+type tDifficuty = 'easy' | 'medium' | 'hard';
 interface ICustomDifficultyProps {
   label: string;
   difficulty: tDifficuty;
   onChange(param: tDifficuty): void;
 }
 
-export const CustomDifficultySelect = ({ difficulty, onChange, label }: ICustomDifficultyProps) => {
-
-  return(
-    <FormControl sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id="simple-select-helper-label">{ label }</InputLabel>
+export const CustomDifficultySelect = ({difficulty, onChange, label}: ICustomDifficultyProps) => {
+  return (
+    <FormControl sx={{m: 1, minWidth: 120}}>
+      <InputLabel id="simple-select-helper-label">{label}</InputLabel>
       <Select
         labelId="imple-select-helper-label"
         id="simple-select-helper"
@@ -141,15 +141,14 @@ export const CustomDifficultySelect = ({ difficulty, onChange, label }: ICustomD
         label="Age"
         onChange={(e) => onChange(e.target.value as tDifficuty)}
       >
-        <MenuItem value={"easy"}>Easy</MenuItem>
-        <MenuItem value={"medium"}>Medium</MenuItem>
-        <MenuItem value={"hard"}>Hard</MenuItem>
+        <MenuItem value={'easy'}>Easy</MenuItem>
+        <MenuItem value={'medium'}>Medium</MenuItem>
+        <MenuItem value={'hard'}>Hard</MenuItem>
       </Select>
       {/* <FormHelperText>With label + helper text</FormHelperText> */}
     </FormControl>
   );
-}
-
+};
 
 interface IAnswerModeOptionProps {
   value: boolean;
@@ -157,14 +156,12 @@ interface IAnswerModeOptionProps {
 }
 
 export const AnswerModeOption = ({value, onChange}: IAnswerModeOptionProps) => {
-
-
-  return(
-    <FormControl sx={{ m: 1, minWidth: 120 }}>
+  return (
+    <FormControl sx={{m: 1, minWidth: 120}}>
       {/* <Typography variant={"caption"} gutterBottom={true} sx={{marginBottom: 2}}> Answer </Typography> */}
-      <FormControlLabel 
+      <FormControlLabel
         control={<Checkbox checked={value} />}
-        label="Show Answer?" 
+        label="Show Answer?"
         labelPlacement="start"
         onChange={(e, v) => onChange(v)}
       />
@@ -172,7 +169,6 @@ export const AnswerModeOption = ({value, onChange}: IAnswerModeOptionProps) => {
     </FormControl>
   );
 };
-
 
 // export const GeneralSettingComp = () => {
 
@@ -192,7 +188,7 @@ export const AnswerModeOption = ({value, onChange}: IAnswerModeOptionProps) => {
 //         // dispatchToStore()
 //         setSelectedCategories(typeof value === 'string' ? value.split(',') : value);
 //         break;
-      
+
 //       case "tag":
 //         setSelectedTags(typeof value === 'string' ? value.split(',') : value);
 //         break;
@@ -205,7 +201,6 @@ export const AnswerModeOption = ({value, onChange}: IAnswerModeOptionProps) => {
 //   const handleSettingsChange = () => {
 
 //   };
-
 
 //   <Stack>
 //     <CustomMultiSelect
@@ -222,7 +217,7 @@ export const AnswerModeOption = ({value, onChange}: IAnswerModeOptionProps) => {
 //       onChange={handleMultipleSelect}
 //       type={"cat"}
 //     />
-//     <CustomDifficultySelect 
+//     <CustomDifficultySelect
 //       label={"Difficulty"}
 //       difficulty={difficulty}
 //       onChange={setDifficulty}

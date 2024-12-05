@@ -22,7 +22,7 @@ export default function useCountdownTimer (props? :ICountdownProps) {
 
   const [countdown, setCountdown] = useState<number>(getInitCountdownMs(minutes, seconds));
   const [hookState, setHookState] = useState({isStarted: false});
-  const intervalRef = useRef<NodeJS.Timer>();
+  const intervalRef = useRef<NodeJS.Timeout>();
 
 
   const getNextCountdownMs = () => {

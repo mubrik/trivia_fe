@@ -1,5 +1,5 @@
 // router
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router";
 // error bundary
 import ErrorBoundary from "./components/error/ErrorBoundary";
 // material theme

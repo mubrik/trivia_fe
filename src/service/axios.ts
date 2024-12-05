@@ -5,12 +5,13 @@ import { IQuestion, IQueryObj, IGetQuestionsQueryFunction } from '../components/
 
 export const baseAxios = axios.create({
   baseURL: 'https://the-trivia-api.com/api/',
+  timeout: 30000,
   // timeout: 3000,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    /* 'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
+    'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token', */
     // 'Access-Control-Allow-Credentials': true,
   },
   // withCredentials: true,

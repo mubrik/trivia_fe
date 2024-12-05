@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 // router
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 // material
 import { 
   Stack, TextField, Button, Typography,
@@ -12,9 +12,9 @@ import {
   AnswerModeOption, StyledOptionDiv
 } from "./CustomSetupComps";
 // Store
-import { useStore } from "../../store/StoreContext";
+import { useAppStore } from "@context/storeProvider";
 // query
-import { useGetTriviaTags, useGetTriviaCategories } from "../queries/queries";
+import { useFetchTriviaTags, useFetchTriviaCategories } from "@service/queries/trivia.queries";
 
 export default function FreePlaySetup () {
 
@@ -24,10 +24,10 @@ export default function FreePlaySetup () {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<"hard"|"easy"|"medium">('easy');
   // store
-  const { dispatchToStore, freePlaySettings } = useStore();
+  const { dispatchToStore, freePlaySettings } = useAppStore();
   // tags
-  const { data: tags } = useGetTriviaTags();
-  const { data: categories } = useGetTriviaCategories();
+  const { data: tags } = useFetchTriviaTags();
+  const { data: categories } = useFetchTriviaCategories();
   // nav
   const navigate = useNavigate();
 

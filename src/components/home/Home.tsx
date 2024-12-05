@@ -1,7 +1,7 @@
 // animte
 import { motion } from "framer-motion";
 // nav to
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 // material
 import {
   Button, Stack, Divider, Box,
@@ -23,6 +23,7 @@ export default function Home () {
   return(
     <motion.div
       key={"home"}
+      style={{width: "100%"}}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
